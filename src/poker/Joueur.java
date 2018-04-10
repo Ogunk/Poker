@@ -16,17 +16,29 @@ public class Joueur {
     private String nom;
     private ArrayList<Carte> laMain;
     private int argent;
+    private int miseEnCours;
+    
+    private Table uneTable;
+    
     private boolean bouton;
+    private boolean petiteBlinde;
+    private boolean grosseBlinde;
     
     public static final int MAIN = 2;
     
     //Constructeur
-    public Joueur(String n, int argent)
+    public Joueur(String n)
     {
         this.laMain =  new ArrayList<>();
         this.nom = n;
-        this.argent = argent;
+        this.argent = this.uneTable.getArgent();
+        this.miseEnCours = 0;
+        
+        this.uneTable = new Table();
+        
         this.bouton = false;
+        this.petiteBlinde = false;
+        this.grosseBlinde = false;
     }
     
     //Le joueur reçoit ses cartes
@@ -46,6 +58,26 @@ public class Joueur {
     public void setLeBouton(boolean b)
     {
         this.bouton = b;
+    }
+    
+    //Affecte la petite blinde à un joueur
+    public void setPetiteBlinde(boolean b)
+    {
+        this.petiteBlinde = b;
+    }
+    
+    //Affecte la grosse blinde à un joueur
+    public void setGrosseBlinde(boolean b)
+    {
+        this.grosseBlinde = b;
+    }
+    
+    //Reset les roles a false de tout les joueurs
+    public void resetRole()
+    {
+        this.bouton = false;
+        this.petiteBlinde = false;
+        this.grosseBlinde = false;
     }
     
     //Retourne la main
@@ -83,8 +115,15 @@ public class Joueur {
     }
     
     //Miser son argent
-    public void miserArgent()
+    public void miserArgent(int sommeAMiser)
     {
+        while(this.argent < sommeAMiser)
+        {
+            System.out.println("Impossible de miser une somme supérieur à votre solde, veuillez miser quelque chose égal ou inférieur à : " + this.argent);
+        }
+        
+        this.argent = this.argent - sommeAMiser;
+        this.miseEnCours = this.miseEnCours + sommeAMiser;
         
     }
     

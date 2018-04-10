@@ -18,8 +18,8 @@ public class Poker {
         // TODO code application logic here
         
         //Création joueur
-        Joueur unJoeur = new Joueur("Ogün",1000);
-        Joueur deuxJoueur = new Joueur("Ezziaro",1000);
+        Joueur unJoeur = new Joueur("Ogün");
+        Joueur deuxJoueur = new Joueur("Ezziaro");
         
         //Création table + ajout joueur
         Table laTable = new Table();

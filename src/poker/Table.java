@@ -19,6 +19,10 @@ public class Table {
     private ArrayList<Carte> lesCartes;
     private ArrayList<Carte> carteSurTable;
     
+    private int argentJoueur;
+    private int petiteBlinde;
+    private int grosseBlinde;
+    
     private static final int NOMBRE_DE_CARTES = 52;
     
     //Constructeur
@@ -27,6 +31,7 @@ public class Table {
         this.lesJoueurs = new ArrayList<>();
         this.lesCartes = new ArrayList<>();
         this.carteSurTable = new ArrayList<>();
+        this.argentJoueur = 1000;
     }
     
     //Initialise le jeu
@@ -174,12 +179,16 @@ public class Table {
         System.out.println(this.carteSurTable.get(this.carteSurTable.size()-1).toString());
     }
     
+    //Retourne l'argent que cette attribue aux joueurs
+    public int getArgent()
+    {
+        return this.argentJoueur;
+    }
+    
     //Joue un tour de poker
     public void jouer()
     {
         
-    }
-    
-    
+    } 
           
 }
