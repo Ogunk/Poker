@@ -5,6 +5,8 @@
  */
 package poker;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author Ogun
@@ -12,13 +14,15 @@ package poker;
 public class Carte {
     
     private String laCouleur;
-    private int numéro;
+    private int numero;
+    private ArrayList<Carte> main;
+    
     
     //Constructeur
     public Carte(String couleur, int num)
     {
         this.laCouleur = couleur;
-        this.numéro = num;
+        this.numero = num;
     }
     
     public Carte(){}
@@ -44,7 +48,6 @@ public class Carte {
         }
         
         System.out.println("Le jeu des cartes est complet!");
-       
     }
     
     //Retourne la carte
@@ -52,9 +55,34 @@ public class Carte {
     public String toString()
     {
         String res = "";
-        res = res + this.laCouleur + " " + this.numéro;
+        res = res + getCouleur() + " " + getNumero();
         
         return res;
     }
-
+    
+    //Rtourne la couleur de la carte
+    public String getCouleur()
+    {
+        return this.laCouleur;
+    }
+    
+    //Rtourne la valeur de la carte
+    public int getNumero()
+    {
+        return this.numero;
+    }
+    
+    //Test main quinte flush royale
+    public void mainFlushRoyal(ArrayList cartesSurTable,ArrayList mainJoueur)
+    {
+        this.main =  new ArrayList<>();
+        this.main.addAll(cartesSurTable);
+        this.main.addAll(mainJoueur);
+        
+        if (this.main.get(0).getCouleur().equals(this.main.get(0).getCouleur()))
+        {
+            
+        }
+    }   
+            
 }

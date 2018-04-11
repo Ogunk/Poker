@@ -54,6 +54,12 @@ public class Joueur {
         }
     }
     
+    //Retourne la main d'un joueur
+    public ArrayList getLaMain()
+    {
+        return this.laMain;
+    }
+    
     //Affecte le bouton à un joueur
     public void bouton(boolean b)
     {
@@ -84,12 +90,6 @@ public class Joueur {
         this.bouton = false;
         this.petiteBlind = false;
         this.grosseBlind = false;
-    }
-    
-    //Retourne la main
-    public ArrayList getLaMain()
-    {
-        return this.laMain;
     }
     
     //Retourne les cartes en main
