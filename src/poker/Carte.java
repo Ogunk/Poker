@@ -43,7 +43,7 @@ public class Carte {
             }
         }
         
-        System.out.println("Le jeu des cartes est complet! \n");
+        System.out.println("Le jeu des cartes est complet!");
        
     }
     

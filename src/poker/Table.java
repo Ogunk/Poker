@@ -106,7 +106,7 @@ public class Table {
         if(this.lesCartes.size() == NOMBRE_DE_CARTES)
         {
             Collections.shuffle(this.lesCartes);
-            System.out.println("Les cartes ont était mélangés ! \n");
+            System.out.println("Les cartes ont était mélangés !\n");
         }
         else
         {
@@ -155,9 +155,8 @@ public class Table {
     //Affiche le flop, les 3 première carte sur la table, brule la carte du haut avant d'afficher les suivantes
     public void afficherFlop()
     {
-        System.out.println("Affichage du Flop, on brule la première carte.");
+        System.out.println("On brule la première carte.");
         this.lesCartes.remove(0);
-        System.out.println("Carte brulé.");
         System.out.println("Placement du Flop : ");
         for(int i=0; i<3;i++)
         {
