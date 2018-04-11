@@ -37,7 +37,9 @@ public class Table {
     //Initialise le jeu
     public void initTable()
     {
-        this.choisirJoueurBouton();
+        this.setArgentJoueurs();
+        this.melangerLesJoueurs();
+        this.joueurRole();
         this.melangerLesCartes();
         this.distribuerCartes();
         
@@ -62,6 +64,26 @@ public class Table {
     public void ajouterJoueur(Joueur unJoueur)
     {
         this.lesJoueurs.add(unJoueur);
+    }
+    
+    //Donne le rôle de Bouton, Petite Blind et grosse blind
+    public void joueurRole()
+    {
+        this.lesJoueurs.get(0).bouton(true);
+        this.lesJoueurs.get(1).petiteBlind(true);
+        this.lesJoueurs.get(2).grosseBlind(true);
+    }
+    
+    //Rotation des rôles durant à la fin de chaque tours
+    public void joueurChangeRole(){
+        Collections.rotate(this.lesJoueurs, -1);
+        this.lesJoueurs.get(0).bouton(true);
+        this.lesJoueurs.get(1).petiteBlind(true);
+        this.lesJoueurs.get(2).grosseBlind(true);
+        
+        for (int i = 3; i < this.lesJoueurs.size(); i++){
+            this.lesJoueurs.get(i).resetRole();
+        }
     }
     
     //Ajoute les cartes à la table
@@ -92,6 +114,14 @@ public class Table {
         }
     }
     
+    //Mélange les joueurs pour déterminer les positions.
+    public void melangerLesJoueurs()
+    {
+        
+        Collections.shuffle(this.lesJoueurs);
+        System.out.println("Les joueurs sont prêts !");
+    }
+    
     //On vérifie si tout les joueurs ont reçu leur cartes
     public boolean joueurPret()
     {
@@ -107,15 +137,6 @@ public class Table {
         }
         
         return pret;
-    }
-    
-    //Choisie un personne au hasard pour qu'il ai le bouton
-    public void choisirJoueurBouton()
-    {
-        Random rand = new Random();
-        int n = rand.nextInt(this.lesJoueurs.size()) + 1 ;
-        
-        this.lesJoueurs.get(n).setLeBouton(true);
     }
     
     //Distribue les cartes aux joueurs de la table
@@ -183,6 +204,15 @@ public class Table {
     public int getArgent()
     {
         return this.argentJoueur;
+    }
+    
+    //Initialise l'argent des joueurs en fonction de la somme de la table
+    public void setArgentJoueurs()
+    {
+        for(Joueur unJoueur : this.lesJoueurs)
+        {
+            unJoueur.setArgent(getArgent());
+        }
     }
     
     //Joue un tour de poker

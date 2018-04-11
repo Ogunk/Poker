@@ -21,8 +21,8 @@ public class Joueur {
     private Table uneTable;
     
     private boolean bouton;
-    private boolean petiteBlinde;
-    private boolean grosseBlinde;
+    private boolean petiteBlind;
+    private boolean grosseBlind;
     
     public static final int MAIN = 2;
     
@@ -31,14 +31,14 @@ public class Joueur {
     {
         this.laMain =  new ArrayList<>();
         this.nom = n;
-        this.argent = this.uneTable.getArgent();
+        this.argent = 0;
         this.miseEnCours = 0;
         
         this.uneTable = new Table();
         
         this.bouton = false;
-        this.petiteBlinde = false;
-        this.grosseBlinde = false;
+        this.petiteBlind = false;
+        this.grosseBlind = false;
     }
     
     //Le joueur reçoit ses cartes
@@ -55,29 +55,35 @@ public class Joueur {
     }
     
     //Affecte le bouton à un joueur
-    public void setLeBouton(boolean b)
+    public void bouton(boolean b)
     {
-        this.bouton = b;
+        this.bouton         = b;
+        this.petiteBlind    = false;
+        this.grosseBlind    = false;
     }
     
     //Affecte la petite blinde à un joueur
-    public void setPetiteBlinde(boolean b)
+    public void petiteBlind(boolean b)
     {
-        this.petiteBlinde = b;
+        this.petiteBlind     = b;
+        this.bouton         = false;
+        this.grosseBlind    = false;
     }
     
     //Affecte la grosse blinde à un joueur
-    public void setGrosseBlinde(boolean b)
+    public void grosseBlind(boolean b)
     {
-        this.grosseBlinde = b;
+        this.grosseBlind    = b;
+        this.bouton         = false;
+        this.petiteBlind    = false;
     }
     
     //Reset les roles a false de tout les joueurs
     public void resetRole()
     {
         this.bouton = false;
-        this.petiteBlinde = false;
-        this.grosseBlinde = false;
+        this.petiteBlind = false;
+        this.grosseBlind = false;
     }
     
     //Retourne la main
@@ -103,6 +109,12 @@ public class Joueur {
     public int getArgent()
     {
         return this.argent;
+    }
+    
+    //Modifie le solde actuel du joueur
+    public void setArgent(int argent)
+    {
+        this.argent = argent;
     }
     
     //Retourne le détail du joueur
@@ -137,6 +149,22 @@ public class Joueur {
     public void suivre()
     {
         
+    }
+    
+    //Retourne un string du role du joueur
+    public String getRole(){
+        if (this.bouton){
+            return "Bouton";
+        }
+        else if(this.grosseBlind){
+            return "Grosse Blind";
+        }
+        else if (this.petiteBlind){
+            return "Petite Blind";
+        }
+        else{
+            return "Joueur";
+        }
     }
     
 }
