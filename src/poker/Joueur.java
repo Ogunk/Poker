@@ -17,6 +17,7 @@ public class Joueur {
     private ArrayList<Carte> laMain;
     private int argent;
     private int miseEnCours;
+    private int score;
     
     private Table uneTable;
     
@@ -33,6 +34,7 @@ public class Joueur {
         this.nom = n;
         this.argent = 0;
         this.miseEnCours = 0;
+        this.score = 0;
         
         this.uneTable = new Table();
         
@@ -115,6 +117,12 @@ public class Joueur {
     public void setArgent(int argent)
     {
         this.argent = argent;
+    }
+    
+    //Modifie le score du joueur
+    public void setScore(int score)
+    {
+        this.argent = score;
     }
     
     //Retourne le détail du joueur

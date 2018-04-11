@@ -72,6 +72,57 @@ public class Carte {
         return this.numero;
     }
     
+    //Test couleur
+    public ArrayList<Carte> mainCouleur(ArrayList<Carte> cartesSurTable,Joueur unJoueur)
+    {
+        this.main =  new ArrayList<>();
+        cartesSurTable.addAll(unJoueur.getLaMain());
+        
+        int score;
+        int trefle = 0;
+        int coeur = 0;
+        int carreau = 0;
+        int pique = 0;
+        
+        for (Carte carte : cartesSurTable)
+        {
+            switch (carte.getCouleur())
+            {
+                case "Trèfles":
+                    trefle = trefle++;
+                    break;
+                case "Coeurs":
+                    coeur = coeur++;
+                    break;
+                case "Carreux":
+                    carreau = carreau++;
+                    break;
+                case "Piques":
+                    pique = pique++;
+                    break;
+            }
+        }
+        
+        if ()
+        {
+            score = this.main.get(0).getNumero();
+            for (Carte c : this.main)
+            {
+                if (c.getNumero() > score)
+                {
+                    score = c.getNumero();
+                }
+            }
+            unJoueur.setScore(score);
+            
+        }
+        else
+        {
+            return cartesSurTable;
+        }
+        return cartesSurTable;
+    }
+    
     //Test main quinte flush royale
     public void mainFlushRoyal(ArrayList cartesSurTable,ArrayList mainJoueur)
     {
@@ -79,10 +130,15 @@ public class Carte {
         this.main.addAll(cartesSurTable);
         this.main.addAll(mainJoueur);
         
-        if (this.main.get(0).getCouleur().equals(this.main.get(0).getCouleur()))
-        {
-            
-        }
-    }   
+        
+    }
+    
+    //Test main quinte flush
+    public void mainFlush(ArrayList cartesSurTable,ArrayList mainJoueur)
+    {
+        this.main =  new ArrayList<>();
+        this.main.addAll(cartesSurTable);
+        this.main.addAll(mainJoueur);
+    }
             
 }
