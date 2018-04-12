@@ -58,6 +58,7 @@ public class Table {
         {          
             System.out.println(uneCarte.toString());
         }
+        
     }
     
     //Ajouter un joueur à la table
