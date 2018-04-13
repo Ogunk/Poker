@@ -116,7 +116,7 @@ public class Carte implements Comparable<Carte> {
                     }
                 }
             }
-            unJoueur.set
+            unJoueur.setCombinaison("Couleur");
             return Carte.main;
         } else {
             return cartesTable;

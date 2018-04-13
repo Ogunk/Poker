@@ -14,6 +14,7 @@ import java.util.ArrayList;
 public class Joueur {
 
     private String nom;
+    private String combinaison;
     private ArrayList<Carte> laMain;
     private int argent;
     private int miseEnCours;
@@ -123,6 +124,16 @@ public class Joueur {
         this.argent = this.argent - sommeAMiser;
         this.miseEnCours = this.miseEnCours + sommeAMiser;
 
+    }
+
+    //Affecte la combinaison de carte du joueur
+    public void setCombinaison(String combi) {
+        this.combinaison = combi;
+    }
+
+    //Retourne la combinaison de carte du joueur
+    public String getCombinaison() {
+        return this.combinaison;
     }
 
     //Se coucher
