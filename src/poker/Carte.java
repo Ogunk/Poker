@@ -11,7 +11,7 @@ import java.util.Comparator;
 
 /**
  *
- * @author Ogun
+ * @author Ogun & HariiBo
  */
 public class Carte implements Comparable<Carte> {
 
@@ -70,8 +70,9 @@ public class Carte implements Comparable<Carte> {
     //Test main couleur
     public static ArrayList<Carte> mainCouleur(ArrayList<Carte> cartesTable, Joueur unJoueur) {
         Carte.main = new ArrayList<>();
-        Carte.main.addAll(cartesTable);
-        Carte.main.addAll(unJoueur.getLaMain());
+        //Carte.main.addAll(cartesTable);
+        //Carte.main.addAll(unJoueur.getLaMain());
+        cartesTable.addAll(unJoueur.getLaMain());
 
         int trefle = 0;
         int coeur = 0;
@@ -140,31 +141,73 @@ public class Carte implements Comparable<Carte> {
     }
 
     //Test main suite
-    public static ArrayList<Carte> mainSuite(ArrayList<Carte> cartesTable) {
+    public static ArrayList<Carte> mainSuite(ArrayList<Carte> cartesTable, Joueur unJoueur) {
         Carte.main = new ArrayList<Carte>();
+        cartesTable.addAll(unJoueur.getLaMain());
+
         int x = 0;
         int i = 0;
+        int triple = 0;
+        int duo = 0;
 
         if (cartesTable.size() > 5) {
-            while (x < 4) {
-                if (cartesTable.get(x).getNumero() == cartesTable.get(x + 3).getNumero()) {
+            //Si il y a un carré dans les 7 cartes, suite pas possible
+            for (i = 0; i < 4; i++) {
+                if (cartesTable.get(i).getNumero() == cartesTable.get(i + 3).getNumero()) {
                     return cartesTable;
-                } else if (cartesTable.get(x).getNumero() == cartesTable.get(x + 2).getNumero()) {
-                    Carte.main.add((Carte) cartesTable.get(x));
-                    if (cartesTable.get(x + 2).getNumero() == cartesTable.get(x + 3).getNumero()) {
-                        return cartesTable;
-                    }
-                } else if (cartesTable.get(x).equals(cartesTable.get(x + 1))) {
-
                 }
             }
+            //Détection des triples et doubles dans la liste de
+            for (i = 0; i < 6; i++) {
+                if (cartesTable.get(i).getNumero() == cartesTable.get(i + 2).getNumero()) {
+                    triple++;
+                } else if (cartesTable.get(i).getNumero() == cartesTable.get(i + 1).getNumero()) {
+                    duo++;
+                }
+            }
+            if ((duo == 3 || triple == 2) || (duo == 2 && triple == 1) || (duo == 1 && triple == 1)) {
+                return cartesTable;
+            }
 
-            while (i <= 7) {
-                cartesTable.get(i).getNumero();
+            //Retirer les doubles ou triples
+            while (x < 5) {
+                if (cartesTable.get(x).getNumero() == cartesTable.get(x + 1).getNumero()) {
+                    cartesTable.remove(x);
+                } else {
+                    Carte.main.add(cartesTable.get(x));
+                    x++;
+                }
+            }
+            Collections.sort(cartesTable);
+
+            if (cartesTable.size() >= 5) {
+                Carte.main.addAll(cartesTable);
+                i = 0;
+                while (i < Carte.main.size() - 1) {
+                    if (Carte.main.get(i).getNumero() == Carte.main.get(i + 1).getNumero() + 1) {
+                        if (Carte.main.size() < 5) {
+                            return cartesTable;
+                        }
+                    } else {
+                        Carte.main.remove(i);
+                        i++;
+                    }
+                }
+                if (Carte.main.size() == 5) {
+                    return Carte.main;
+                } else if (Carte.main.size() > 5) {
+
+                }
+
             }
 
         } else if (cartesTable.size() == 5) {
-
+            for (i = 0; i < 4; i++) {
+                if (cartesTable.get(i).getNumero() != cartesTable.get(i + 1).getNumero() + 1) {
+                    return cartesTable;
+                }
+            }
+            return Carte.main;
         }
         return cartesTable;
     }
