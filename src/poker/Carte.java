@@ -70,8 +70,6 @@ public class Carte implements Comparable<Carte> {
     //Test main couleur
     public static ArrayList<Carte> mainCouleur(ArrayList<Carte> cartesTable, Joueur unJoueur) {
         Carte.main = new ArrayList<>();
-        //Carte.main.addAll(cartesTable);
-        //Carte.main.addAll(unJoueur.getLaMain());
         cartesTable.addAll(unJoueur.getLaMain());
 
         int trefle = 0;
