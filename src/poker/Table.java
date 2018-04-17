@@ -62,15 +62,9 @@ public class Table extends Carte {
         for (Joueur unJoueur : this.lesJoueurs) {
 
             this.cartes = Carte.mainCouleur(this.carteSurTable, unJoueur);
+            this.cartes = Carte.mainSuite(this.carteSurTable, unJoueur);
 
-            if (this.cartes.size() == 5) {
-                System.out.println(unJoueur.joueurToString());
-                for (Carte uneCarte : Carte.mainCouleur(this.cartes)) {
-                    System.out.println(uneCarte.toString());
-                }
-            }
         }
-
     }
 
     //Ajouter un joueur à la table
