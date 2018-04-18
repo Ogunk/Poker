@@ -16,6 +16,8 @@ public class Joueur {
     private String nom;
     private String combinaison;
     private ArrayList<Carte> laMain;
+    private ArrayList<Carte> mainGagnante;
+
     private int argent;
     private int miseEnCours;
     private int score;
@@ -33,13 +35,14 @@ public class Joueur {
         this.argent = 0;
         this.miseEnCours = 0;
         this.score = 0;
+        this.combinaison = null;
 
         this.bouton = false;
         this.petiteBlind = false;
         this.grosseBlind = false;
     }
 
-    //Le joueur reçoit ses cartes
+    //Le joueur reçoit ses deux cartes
     public void setLaMain(Carte uneCarte) {
         if (this.laMain.size() < MAIN) {
             this.laMain.add(uneCarte);
@@ -104,7 +107,17 @@ public class Joueur {
 
     //Modifie le score du joueur
     public void setScore(int score) {
-        this.argent = score;
+        this.score = score;
+    }
+
+    //Retourne le score du joueur
+    public int getScore() {
+        return this.score;
+    }
+
+    //Retourne le nom du joueur
+    public String getNom() {
+        return this.nom;
     }
 
     //Retourne le détail du joueur
@@ -134,6 +147,16 @@ public class Joueur {
     //Retourne la combinaison de carte du joueur
     public String getCombinaison() {
         return this.combinaison;
+    }
+
+    //Affecte la main forte du joueur
+    public void setMainGagnante(ArrayList<Carte> main) {
+        this.mainGagnante = main;
+    }
+
+    //Retourne la combinaison de carte du joueur
+    public ArrayList<Carte> getMainGagnante() {
+        return this.mainGagnante;
     }
 
     //Se coucher

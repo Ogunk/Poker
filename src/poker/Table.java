@@ -17,7 +17,7 @@ public class Table extends Carte {
     private ArrayList<Joueur> lesJoueurs;
     private ArrayList<Carte> lesCartes;
     private ArrayList<Carte> carteSurTable;
-    private ArrayList<Carte> cartes;
+    private ArrayList<Carte> trash;
 
     private int argentJoueur;
     private int petiteBlind;
@@ -30,6 +30,7 @@ public class Table extends Carte {
         this.lesJoueurs = new ArrayList<>();
         this.lesCartes = new ArrayList<>();
         this.carteSurTable = new ArrayList<>();
+        this.trash = new ArrayList<>();
         this.argentJoueur = 1000;
         this.petiteBlind = 5;
         this.grosseBlind = 10;
@@ -53,6 +54,7 @@ public class Table extends Carte {
         this.afficherRiver();
 
         System.out.println("Voici toutes les cartes sur la table: ");
+        Collections.sort(this.carteSurTable);
         for (Carte uneCarte : this.carteSurTable) {
             System.out.println(uneCarte.toString());
         }
@@ -60,10 +62,14 @@ public class Table extends Carte {
         System.out.println("\n");
 
         for (Joueur unJoueur : this.lesJoueurs) {
+            System.out.println("* " + unJoueur.getNom());
+            //Carte.mainCouleur(this.carteSurTable, unJoueur);
+            Carte.mainSuite(this.carteSurTable, unJoueur);
 
-            this.cartes = Carte.mainCouleur(this.carteSurTable, unJoueur);
-            this.cartes = Carte.mainSuite(this.carteSurTable, unJoueur);
-
+            if (unJoueur.getCombinaison() != null) {
+                System.out.println("############ " + unJoueur.getCombinaison() + " - Score : " + unJoueur.getScore() + " - " + unJoueur.joueurToString());
+                System.out.println(unJoueur.getMainGagnante());
+            }
         }
     }
 
@@ -98,7 +104,6 @@ public class Table extends Carte {
         } else {
             System.out.println("Le jeu de carte est complet");
         }
-
     }
 
     //Mélanger le jeu de carte
@@ -137,6 +142,8 @@ public class Table extends Carte {
         while (!this.joueurPret()) {
             for (Joueur leJoueur : this.lesJoueurs) {
                 leJoueur.setLaMain(this.lesCartes.get(0));
+
+                this.trash.add(this.lesCartes.get(0));
                 this.lesCartes.remove(0);
             }
         }
@@ -144,38 +151,34 @@ public class Table extends Carte {
 
     //Affiche le flop, les 3 première carte sur la table, brule la carte du haut avant d'afficher les suivantes
     public void afficherFlop() {
-        //System.out.println("On brule la première carte.");
+        this.trash.add(this.lesCartes.get(0));
         this.lesCartes.remove(0);
-        //System.out.println("Placement du Flop : ");
+
         for (int i = 0; i < 3; i++) {
             this.carteSurTable.add(this.lesCartes.get(0));
+            this.trash.add(this.lesCartes.get(0));
             this.lesCartes.remove(0);
         }
-
-        for (Carte uneCarte : this.carteSurTable) {
-            //System.out.println(uneCarte.toString());
-        }
-
     }
 
     //Affiche la 4eme carte sur la table, on brule la 1ere carte
     public void afficherTurn() {
-        //System.out.println("Affichage du Turn, on brule la première carte.");
+        this.trash.add(this.lesCartes.get(0));
         this.lesCartes.remove(0);
-        //System.out.println("Placement du Turn : ");
+
         this.carteSurTable.add(this.lesCartes.get(0));
+        this.trash.add(this.lesCartes.get(0));
         this.lesCartes.remove(0);
-        //System.out.println(this.carteSurTable.get(this.carteSurTable.size() - 1).toString());
     }
 
     //Affichage de la derniere carte, on brule la 1ere carte
     public void afficherRiver() {
-        //System.out.println("Affichage de la River, on brule la première carte.");
+        this.trash.add(this.lesCartes.get(0));
         this.lesCartes.remove(0);
-        //System.out.println("Placement de la River : ");
+
         this.carteSurTable.add(this.lesCartes.get(0));
+        this.trash.add(this.lesCartes.get(0));
         this.lesCartes.remove(0);
-        //System.out.println(this.carteSurTable.get(this.carteSurTable.size() - 1).toString());
     }
 
     //Retourne l'argent que cette attribue aux joueurs
