@@ -63,8 +63,20 @@ public class Table extends Carte {
 
         for (Joueur unJoueur : this.lesJoueurs) {
             System.out.println("* " + unJoueur.getNom());
-            //Carte.mainCouleur(this.carteSurTable, unJoueur);
-            Carte.mainSuite(this.carteSurTable, unJoueur);
+            if (Carte.mainFlushRoyal(this.carteSurTable, unJoueur)) {
+                System.out.println("IF 1");
+            } else if (Carte.mainFlush(this.carteSurTable, unJoueur)) {
+                System.out.println("IF 2");
+            } else if (Carte.mainCarre(this.carteSurTable, unJoueur)) {
+                System.out.println("IF 3");
+            } //else if (Carte.mainFull(this.carteSurTable, unJoueur){
+            //System.out.println("IF 4");
+            //}
+            else if (Carte.mainCouleur(this.carteSurTable, unJoueur)) {
+                System.out.println("IF 5");
+            } else if (Carte.mainSuite(this.carteSurTable, unJoueur)) {
+                System.out.println("IF 6");
+            }
 
             if (unJoueur.getCombinaison() != null) {
                 System.out.println("############ " + unJoueur.getCombinaison() + " - Score : " + unJoueur.getScore() + " - " + unJoueur.joueurToString());

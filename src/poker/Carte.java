@@ -17,6 +17,7 @@ public class Carte implements Comparable<Carte> {
 
     private String laCouleur;
     private int numero;
+    private static int i;
     private static ArrayList<Carte> main;
     private static ArrayList<Carte> jeu;
 
@@ -120,14 +121,16 @@ public class Carte implements Comparable<Carte> {
                 } else {
                     Carte.main.remove(5);
                 }
-            }
-            if (Carte.main.size() == 5) {
+                unJoueur.setScore(Carte.main.get(0).getNumero());
+                unJoueur.setCombinaison("Couleur");
+                unJoueur.setMainGagnante(Carte.main);
+                return true;
+            } else if (Carte.main.size() == 5) {
                 unJoueur.setScore(Carte.main.get(0).getNumero());
                 unJoueur.setCombinaison("Couleur");
                 unJoueur.setMainGagnante(Carte.main);
                 return true;
             }
-
             return false;
         } else {
             return false;
@@ -135,21 +138,46 @@ public class Carte implements Comparable<Carte> {
     }
 
     //Test main quinte flush royale
-    public boolean mainFlushRoyal(ArrayList<Carte> cartesTable, Joueur unJoueur) {
+    public static boolean mainFlushRoyal(ArrayList<Carte> cartesTable, Joueur unJoueur) {
         Carte.main = new ArrayList<>();
 
-        cartesTable.addAll(unJoueur.getLaMain());
+        if (mainFlush(cartesTable, unJoueur)) {
+            Carte.main.addAll(unJoueur.getMainGagnante());
+            Collections.sort(Carte.main);
+
+            if (Carte.main.get(0).getNumero() == 13) {
+                System.out.println("///////////////////////////////////QUINTE FLUSH ROYAL");
+                System.out.println(Carte.main);
+
+                unJoueur.setCombinaison("FlushRoyal");
+                return true;
+            }
+        }
 
         return false;
     }
 
     //Test main quinte flush
-    public boolean mainFlush(ArrayList<Carte> cartesTable, Joueur unJoueur) {
+    public static boolean mainFlush(ArrayList<Carte> cartesTable, Joueur unJoueur) {
         Carte.main = new ArrayList<>();
 
-        cartesTable.addAll(unJoueur.getLaMain());
+        if (mainCouleur(cartesTable, unJoueur)) {
+            Carte.main.addAll(unJoueur.getMainGagnante());
+            Collections.sort(Carte.main);
+            unJoueur.clearScore();
+            unJoueur.clearCombinaison();
+            unJoueur.clearMainGagnante();
 
-        return false;
+            if (mainSuite(Carte.main, unJoueur)) {
+                System.out.println("mainFlush QUINTE FLUSH");
+                unJoueur.setCombinaison("Flush");
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
     }
 
     //Test main suite
@@ -161,8 +189,6 @@ public class Carte implements Comparable<Carte> {
         Carte.jeu.addAll(cartesTable);
         Collections.sort(Carte.jeu);
 
-        int x = 0;
-        int i = 0;
         int triple = 0;
         int duo = 0;
 
@@ -193,11 +219,12 @@ public class Carte implements Comparable<Carte> {
         }
 
         //Retirer les doubles ou triples
-        while (x < Carte.jeu.size() - 1) {
-            if (Carte.jeu.get(x).getNumero() == Carte.jeu.get(x + 1).getNumero()) {
-                Carte.jeu.remove(x);
+        i = 0;
+        while (i < Carte.jeu.size() - 1) {
+            if (Carte.jeu.get(i).getNumero() == Carte.jeu.get(i + 1).getNumero()) {
+                Carte.jeu.remove(i);
             } else {
-                x++;
+                i++;
             }
         }
 
@@ -207,38 +234,28 @@ public class Carte implements Comparable<Carte> {
             i = 0;
             while (i < Carte.jeu.size() - 1) {
                 Carte.main.add(Carte.jeu.get(i));
-                //System.out.println("Ajouter carte main " + Carte.jeu.get(i));
                 if (Carte.jeu.get(i).getNumero() == Carte.jeu.get(i + 1).getNumero() + 1) {
                 } else {
                     if (Carte.main.size() == 5) {
                         unJoueur.setScore(Carte.main.get(0).getNumero());
                         unJoueur.setCombinaison("Suite");
                         unJoueur.setMainGagnante(Carte.main);
-                        //System.out.println("SUITE 3.1");
                         return true;
                     } else if (Carte.main.size() > 3) {
-                        //System.out.println("False main petite 3");
                         return false;
                     } else {
-                        //System.out.println("Clear main");
                         Carte.main.clear();
-                        //System.out.print(Carte.main);
                     }
                 }
                 i++;
             }
-            //System.out.println("229 - " + Carte.main);
-            //System.out.println("229 - " + Carte.jeu);
             if (!Carte.main.isEmpty()) {
-                //System.out.println("Empty");
                 if (Carte.main.get(Carte.main.size() - 1).getNumero() == (Carte.jeu.get(i).getNumero() + 1)) {
                     Carte.main.add(Carte.jeu.get(i));
                 }
             }
 
-            //System.out.println("239 - " + Carte.main);
             if (Carte.main.size() < 5) {
-                //System.out.println("False main petite");
                 return false;
             } else if (Carte.main.size() == 5) {
                 unJoueur.setScore(Carte.main.get(0).getNumero());
@@ -270,7 +287,53 @@ public class Carte implements Comparable<Carte> {
         return false;
     }
 
-    //Test main paire, double paires, brelan, full et carré
+    //Test d'une main avec un carré
+    public static boolean mainCarre(ArrayList<Carte> cartesTable, Joueur unJoueur) {
+        Carte.main = new ArrayList<>();
+        Carte.jeu = new ArrayList<>();
+
+        Carte.jeu.addAll(unJoueur.getLaMain());
+        Carte.jeu.addAll(cartesTable);
+        Collections.sort(Carte.jeu);
+
+        for (i = 0; i < 4; i++) {
+            if (Carte.jeu.get(i).getNumero() == Carte.jeu.get(i + 3).getNumero()) {
+                Carte.main.add(Carte.jeu.get(i));
+                Carte.main.add(Carte.jeu.get(i + 1));
+                Carte.main.add(Carte.jeu.get(i + 2));
+                Carte.main.add(Carte.jeu.get(i + 3));
+
+                Carte.jeu.remove(Carte.jeu.get(i));
+                Carte.jeu.remove(Carte.jeu.get(i + 1));
+                Carte.jeu.remove(Carte.jeu.get(i + 2));
+                Carte.jeu.remove(Carte.jeu.get(i + 3));
+
+                Collections.sort(Carte.jeu);
+
+                Carte.main.add(Carte.jeu.get(0));
+                unJoueur.setCombinaison("Carre");
+                unJoueur.setMainGagnante(Carte.main);
+                unJoueur.setScore(Carte.main.get(0).getNumero());
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    //Test d'une main avec un carré
+    public static boolean mainFull(ArrayList<Carte> cartesTable, Joueur unJoueur) {
+        Carte.main = new ArrayList<>();
+        Carte.jeu = new ArrayList<>();
+
+        Carte.jeu.addAll(unJoueur.getLaMain());
+        Carte.jeu.addAll(cartesTable);
+        Collections.sort(Carte.jeu);
+
+        return false;
+    }
+
+    //Test main paire, double paires
     public static boolean mainPaires(ArrayList<Carte> cartesTable, Joueur unJoueur) {
         Carte.main = new ArrayList<>();
 

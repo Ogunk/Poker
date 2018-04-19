@@ -115,6 +115,11 @@ public class Joueur {
         return this.score;
     }
 
+    //Reset le score
+    public void clearScore() {
+        this.score = 0;
+    }
+
     //Retourne le nom du joueur
     public String getNom() {
         return this.nom;
@@ -149,14 +154,24 @@ public class Joueur {
         return this.combinaison;
     }
 
+    //Reset la combinaison de carte du joueur
+    public void clearCombinaison() {
+        this.combinaison = null;
+    }
+
     //Affecte la main forte du joueur
     public void setMainGagnante(ArrayList<Carte> main) {
         this.mainGagnante = main;
     }
 
-    //Retourne la combinaison de carte du joueur
+    //Affecte la main forte du joueur
     public ArrayList<Carte> getMainGagnante() {
         return this.mainGagnante;
+    }
+
+    //Clear la main du joueur
+    public void clearMainGagnante() {
+        this.mainGagnante.clear();
     }
 
     //Se coucher
