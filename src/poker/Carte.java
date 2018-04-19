@@ -18,6 +18,8 @@ public class Carte implements Comparable<Carte> {
     private String laCouleur;
     private int numero;
     private static int i;
+    private static int duo;
+    private static int triple;
     private static ArrayList<Carte> main;
     private static ArrayList<Carte> jeu;
 
@@ -143,6 +145,7 @@ public class Carte implements Comparable<Carte> {
 
         if (mainFlush(cartesTable, unJoueur)) {
             Carte.main.addAll(unJoueur.getMainGagnante());
+
             Collections.sort(Carte.main);
 
             if (Carte.main.get(0).getNumero() == 13) {
@@ -189,8 +192,8 @@ public class Carte implements Comparable<Carte> {
         Carte.jeu.addAll(cartesTable);
         Collections.sort(Carte.jeu);
 
-        int triple = 0;
-        int duo = 0;
+        triple = 0;
+        duo = 0;
 
         if (Carte.jeu.size() > 5) {
             //Si il y a un carré dans les 7 cartes, suite pas possible
@@ -201,11 +204,12 @@ public class Carte implements Comparable<Carte> {
             }
 
             //Détection des triples et doubles dans la liste de
-            for (i = 0; i < 5; i++) {
-                if (Carte.jeu.get(i).getNumero() == Carte.jeu.get(i + 2).getNumero()) {
-                    triple++;
-                    i = i + 2;
-
+            for (i = 0; i < 6; i++) {
+                if (i < 5) {
+                    if (Carte.jeu.get(i).getNumero() == Carte.jeu.get(i + 2).getNumero()) {
+                        triple++;
+                        i = i + 2;
+                    }
                 } else if (Carte.jeu.get(i).getNumero() == Carte.jeu.get(i + 1).getNumero()) {
                     duo++;
                 }
@@ -263,6 +267,14 @@ public class Carte implements Comparable<Carte> {
                 unJoueur.setMainGagnante(Carte.main);
                 //System.out.println("SUITE 4.1");
                 return true;
+            } else if (Carte.main.size() == 7) {
+                Carte.main.remove(6);
+                Carte.main.remove(5);
+
+                unJoueur.setScore(Carte.main.get(0).getNumero());
+                unJoueur.setCombinaison("Suite");
+                unJoueur.setMainGagnante(Carte.main);
+                return true;
             }
 
             System.out.println("252 - PAS FINI CODER");
@@ -303,10 +315,10 @@ public class Carte implements Comparable<Carte> {
                 Carte.main.add(Carte.jeu.get(i + 2));
                 Carte.main.add(Carte.jeu.get(i + 3));
 
-                Carte.jeu.remove(Carte.jeu.get(i));
-                Carte.jeu.remove(Carte.jeu.get(i + 1));
-                Carte.jeu.remove(Carte.jeu.get(i + 2));
-                Carte.jeu.remove(Carte.jeu.get(i + 3));
+                Carte.jeu.remove(i);
+                Carte.jeu.remove(i);
+                Carte.jeu.remove(i);
+                Carte.jeu.remove(i);
 
                 Collections.sort(Carte.jeu);
 
@@ -326,9 +338,80 @@ public class Carte implements Comparable<Carte> {
         Carte.main = new ArrayList<>();
         Carte.jeu = new ArrayList<>();
 
+        duo = 0;
+        triple = 0;
+
         Carte.jeu.addAll(unJoueur.getLaMain());
         Carte.jeu.addAll(cartesTable);
         Collections.sort(Carte.jeu);
+
+        //Détection des triples et doubles dans la liste de
+        for (i = 0; i < 6; i++) {
+            if (i < 5) {
+                if (Carte.jeu.get(i).getNumero() == Carte.jeu.get(i + 2).getNumero()) {
+                    Carte.main.add(Carte.jeu.get(i));
+                    Carte.main.add(Carte.jeu.get(i + 1));
+                    Carte.main.add(Carte.jeu.get(i + 2));
+                    unJoueur.setScore(Carte.main.get(0).getNumero());
+                    triple++;
+                    i = i + 2;
+                    if (duo == 1) {
+
+                    }
+                }
+            } else if (Carte.jeu.get(i).getNumero() == Carte.jeu.get(i + 1).getNumero()) {
+                Carte.main.add(Carte.jeu.get(i));
+                Carte.main.add(Carte.jeu.get(i + 1));
+                duo++;
+                if (triple == 1) {
+                    break;
+                }
+            }
+        }
+
+        if (duo == 1 && triple == 1) {
+            Collections.sort(Carte.main);
+            unJoueur.setCombinaison("Full");
+            unJoueur.setMainGagnante(Carte.main);
+            unJoueur.setScore(Carte.main.get(0).getNumero());
+            return true;
+        }
+        unJoueur.clearScore();
+        return false;
+    }
+
+    //Test main brelan
+    public static boolean mainBrelan(ArrayList<Carte> cartesTable, Joueur unJoueur) {
+        Carte.main = new ArrayList<>();
+        Carte.jeu = new ArrayList<>();
+
+        Carte.jeu.addAll(cartesTable);
+        Carte.jeu.addAll(unJoueur.getLaMain());
+
+        Collections.sort(Carte.jeu);
+
+        //Détection des triples et doubles dans la liste de
+        for (i = 0; i < 5; i++) {
+            if (Carte.jeu.get(i).getNumero() == Carte.jeu.get(i + 2).getNumero()) {
+                Carte.main.add(Carte.jeu.get(i));
+                Carte.main.add(Carte.jeu.get(i + 1));
+                Carte.main.add(Carte.jeu.get(i + 2));
+
+                Carte.jeu.remove(i);
+                Carte.jeu.remove(i);
+                Carte.jeu.remove(i);
+
+                Collections.sort(Carte.jeu);
+
+                Carte.main.add(Carte.jeu.get(0));
+                Carte.main.add(Carte.jeu.get(1));
+
+                unJoueur.setCombinaison("Brelan");
+                unJoueur.setMainGagnante(Carte.main);
+                unJoueur.setScore(Carte.main.get(0).getNumero());
+                return true;
+            }
+        }
 
         return false;
     }
@@ -336,39 +419,53 @@ public class Carte implements Comparable<Carte> {
     //Test main paire, double paires
     public static boolean mainPaires(ArrayList<Carte> cartesTable, Joueur unJoueur) {
         Carte.main = new ArrayList<>();
+        Carte.jeu = new ArrayList<>();
 
-        int i;
-        int triple = 0;
-        int duo = 0;
+        duo = 0;
 
-        cartesTable.addAll(unJoueur.getLaMain());
+        Carte.jeu.addAll(cartesTable);
+        Carte.jeu.addAll(unJoueur.getLaMain());
 
-        for (i = 0; i < 4; i++) {
-            if (cartesTable.get(i).getNumero() == cartesTable.get(i + 3).getNumero()) {
-                System.out.println("Return Carré");
-                Carte.main.add(cartesTable.get(i));
-                Carte.main.add(cartesTable.get(i + 1));
-                Carte.main.add(cartesTable.get(i + 2));
-                Carte.main.add(cartesTable.get(i + 3));
+        Collections.sort(Carte.jeu);
 
-                unJoueur.setMainGagnante(Carte.main);
-                return false;
-            }
-        }
-
-        for (i = 0; i < 5; i++) {
-            if (cartesTable.get(i).getNumero() == cartesTable.get(i + 2).getNumero()) {
-                triple++;
-            } else if (cartesTable.get(i).getNumero() == cartesTable.get(i + 1).getNumero()) {
+        //Détection des triples et doubles dans la liste de
+        for (i = 0; i < 6; i++) {
+            if (Carte.jeu.get(i).getNumero() == Carte.jeu.get(i + 1).getNumero()) {
                 duo++;
+                if (Carte.main.size() == 4) {
+                    break;
+                }
+                Carte.main.add(Carte.jeu.get(i));
+                Carte.main.add(Carte.jeu.get(i + 1));
+                i++;
             }
         }
 
-        if ((duo == 3 || triple == 2) || (duo == 2 && triple == 1) || (duo == 1 && triple == 1)) {
-            System.out.println("Return 2");
-            return false;
+        if (Carte.main.size() != 0) {
+            Collections.sort(Carte.main);
+            unJoueur.setScore(Carte.main.get(0).getNumero());
+            for (Carte uneCarte : Carte.jeu) {
+                if (duo == 2) {
+                    if (Carte.main.get(0).getNumero() != uneCarte.getNumero()
+                            && Carte.main.get(2).getNumero() != uneCarte.getNumero()) {
+                        Carte.main.add(uneCarte);
+                        unJoueur.setCombinaison("Double");
+                        break;
+                    }
+                } else if (duo == 1) {
+                    if (Carte.main.get(0).getNumero() != uneCarte.getNumero()) {
+                        Carte.main.add(uneCarte);
+                        if (Carte.main.size() == 5) {
+                            unJoueur.setCombinaison("Paire");
+                            break;
+                        }
+                    }
+                }
+            }
+            unJoueur.setMainGagnante(Carte.main);
+            return true;
         }
-
+        unJoueur.clearScore();
         return false;
     }
 

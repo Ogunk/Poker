@@ -64,22 +64,18 @@ public class Table extends Carte {
         for (Joueur unJoueur : this.lesJoueurs) {
             System.out.println("* " + unJoueur.getNom());
             if (Carte.mainFlushRoyal(this.carteSurTable, unJoueur)) {
-                System.out.println("IF 1");
             } else if (Carte.mainFlush(this.carteSurTable, unJoueur)) {
-                System.out.println("IF 2");
             } else if (Carte.mainCarre(this.carteSurTable, unJoueur)) {
-                System.out.println("IF 3");
-            } //else if (Carte.mainFull(this.carteSurTable, unJoueur){
-            //System.out.println("IF 4");
-            //}
-            else if (Carte.mainCouleur(this.carteSurTable, unJoueur)) {
-                System.out.println("IF 5");
+            } else if (Carte.mainFull(this.carteSurTable, unJoueur)) {
+            } else if (Carte.mainCouleur(this.carteSurTable, unJoueur)) {
             } else if (Carte.mainSuite(this.carteSurTable, unJoueur)) {
-                System.out.println("IF 6");
-            }
+            } else if (Carte.mainBrelan(this.carteSurTable, unJoueur)) {
+            } else if (Carte.mainPaires(this.carteSurTable, unJoueur)) {
+            } //else if (Carte.hauteur(this.carteSurTable, unJoueur)){
+            //}
 
             if (unJoueur.getCombinaison() != null) {
-                System.out.println("############ " + unJoueur.getCombinaison() + " - Score : " + unJoueur.getScore() + " - " + unJoueur.joueurToString());
+                System.out.println("###### " + unJoueur.getCombinaison() + " - Score : " + unJoueur.getScore());
                 System.out.println(unJoueur.getMainGagnante());
             }
         }
