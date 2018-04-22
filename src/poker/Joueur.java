@@ -25,6 +25,7 @@ public class Joueur {
     private boolean bouton;
     private boolean petiteBlind;
     private boolean grosseBlind;
+    private boolean fold;
 
     public static final int MAIN = 2;
 
@@ -40,6 +41,7 @@ public class Joueur {
         this.bouton = false;
         this.petiteBlind = false;
         this.grosseBlind = false;
+        this.fold = false;
     }
 
     //Le joueur reçoit ses deux cartes
@@ -54,6 +56,11 @@ public class Joueur {
     //Retourne la main d'un joueur
     public ArrayList getLaMain() {
         return this.laMain;
+    }
+
+    //Clear la main du joueur
+    public void clearMain() {
+        this.laMain.clear();
     }
 
     //Affecte le bouton à un joueur
@@ -134,13 +141,14 @@ public class Joueur {
     }
 
     //Miser son argent
-    public void miserArgent(int sommeAMiser) {
-        while (this.argent < sommeAMiser) {
-            System.out.println("Impossible de miser une somme supérieur à votre solde, veuillez miser quelque chose égal ou inférieur à : " + this.argent);
-        }
+    public void miserArgent(int mise) {
 
-        this.argent = this.argent - sommeAMiser;
-        this.miseEnCours = this.miseEnCours + sommeAMiser;
+        if (mise > 0) {
+            this.argent = this.argent - mise;
+            this.miseEnCours = this.miseEnCours + mise;
+        } else if (mise == 0) {
+            seCoucher();
+        }
 
     }
 
@@ -176,7 +184,13 @@ public class Joueur {
 
     //Se coucher
     public void seCoucher() {
+        this.fold = true;
+    }
 
+    //Retourne la variable fold
+    public boolean getCoucher() {
+        System.out.println(getNom() + " dors comme un dèp");
+        return this.fold;
     }
 
     //Suivre

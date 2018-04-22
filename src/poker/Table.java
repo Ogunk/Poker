@@ -7,6 +7,7 @@ package poker;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Scanner;
 
 /**
  *
@@ -16,8 +17,7 @@ public class Table extends Carte {
 
     private ArrayList<Joueur> lesJoueurs;
     private ArrayList<Carte> lesCartes;
-    private ArrayList<Carte> carteSurTable;
-    private ArrayList<Carte> trash;
+    private ArrayList<Carte> cartesTable;
 
     private int argentJoueur;
     private int petiteBlind;
@@ -29,8 +29,8 @@ public class Table extends Carte {
     public Table() {
         this.lesJoueurs = new ArrayList<>();
         this.lesCartes = new ArrayList<>();
-        this.carteSurTable = new ArrayList<>();
-        this.trash = new ArrayList<>();
+        this.cartesTable = new ArrayList<>();
+
         this.argentJoueur = 1000;
         this.petiteBlind = 5;
         this.grosseBlind = 10;
@@ -54,8 +54,8 @@ public class Table extends Carte {
         this.afficherRiver();
 
         System.out.println("Voici toutes les cartes sur la table: ");
-        Collections.sort(this.carteSurTable);
-        for (Carte uneCarte : this.carteSurTable) {
+        Collections.sort(this.cartesTable);
+        for (Carte uneCarte : this.cartesTable) {
             System.out.println(uneCarte.toString());
         }
 
@@ -63,14 +63,14 @@ public class Table extends Carte {
 
         for (Joueur unJoueur : this.lesJoueurs) {
             System.out.println("* " + unJoueur.getNom());
-            if (Carte.mainFlushRoyal(this.carteSurTable, unJoueur)) {
-            } else if (Carte.mainFlush(this.carteSurTable, unJoueur)) {
-            } else if (Carte.mainCarre(this.carteSurTable, unJoueur)) {
-            } else if (Carte.mainFull(this.carteSurTable, unJoueur)) {
-            } else if (Carte.mainCouleur(this.carteSurTable, unJoueur)) {
-            } else if (Carte.mainSuite(this.carteSurTable, unJoueur)) {
-            } else if (Carte.mainBrelan(this.carteSurTable, unJoueur)) {
-            } else if (Carte.mainPaires(this.carteSurTable, unJoueur)) {
+            if (Carte.mainFlushRoyal(this.cartesTable, unJoueur)) {
+            } else if (Carte.mainFlush(this.cartesTable, unJoueur)) {
+            } else if (Carte.mainCarre(this.cartesTable, unJoueur)) {
+            } else if (Carte.mainFull(this.cartesTable, unJoueur)) {
+            } else if (Carte.mainCouleur(this.cartesTable, unJoueur)) {
+            } else if (Carte.mainSuite(this.cartesTable, unJoueur)) {
+            } else if (Carte.mainBrelan(this.cartesTable, unJoueur)) {
+            } else if (Carte.mainPaires(this.cartesTable, unJoueur)) {
             } //else if (Carte.hauteur(this.carteSurTable, unJoueur)){
             //}
 
@@ -151,7 +151,6 @@ public class Table extends Carte {
             for (Joueur leJoueur : this.lesJoueurs) {
                 leJoueur.setLaMain(this.lesCartes.get(0));
 
-                this.trash.add(this.lesCartes.get(0));
                 this.lesCartes.remove(0);
             }
         }
@@ -159,33 +158,27 @@ public class Table extends Carte {
 
     //Affiche le flop, les 3 première carte sur la table, brule la carte du haut avant d'afficher les suivantes
     public void afficherFlop() {
-        this.trash.add(this.lesCartes.get(0));
         this.lesCartes.remove(0);
 
         for (int i = 0; i < 3; i++) {
-            this.carteSurTable.add(this.lesCartes.get(0));
-            this.trash.add(this.lesCartes.get(0));
+            this.cartesTable.add(this.lesCartes.get(0));
             this.lesCartes.remove(0);
         }
     }
 
     //Affiche la 4eme carte sur la table, on brule la 1ere carte
     public void afficherTurn() {
-        this.trash.add(this.lesCartes.get(0));
         this.lesCartes.remove(0);
 
-        this.carteSurTable.add(this.lesCartes.get(0));
-        this.trash.add(this.lesCartes.get(0));
+        this.cartesTable.add(this.lesCartes.get(0));
         this.lesCartes.remove(0);
     }
 
     //Affichage de la derniere carte, on brule la 1ere carte
     public void afficherRiver() {
-        this.trash.add(this.lesCartes.get(0));
         this.lesCartes.remove(0);
 
-        this.carteSurTable.add(this.lesCartes.get(0));
-        this.trash.add(this.lesCartes.get(0));
+        this.cartesTable.add(this.lesCartes.get(0));
         this.lesCartes.remove(0);
     }
 
@@ -201,9 +194,42 @@ public class Table extends Carte {
         }
     }
 
-    //Joue un tour de poker
+    //Déroulement d'un tour de poker
     public void jouer() {
+        //Première mise avant l'affichage du flop
+        miseTourTable();
 
+        //Si des joueurs jouent le tour
+    }
+
+    //Parti pari entre chaque tour
+    public void miseTourTable() {
+        for (Joueur unJoueur : this.lesJoueurs) {
+            if (!unJoueur.getCoucher()) {
+                System.out.println(unJoueur.getNom() + "Combien misez-vous ?");
+                Scanner sc = new Scanner(System.in);
+                int mise = sc.nextInt();
+                while (unJoueur.getArgent() < mise) {
+                    System.out.println("Impossible de miser une somme supérieur à votre solde,"
+                            + " veuillez miser quelque chose égal ou inférieur à : " + unJoueur.getArgent());
+                    mise = sc.nextInt();
+                }
+                unJoueur.miserArgent(mise);
+                System.out.println(unJoueur.getNom() + " mise : " + mise);
+            }
+        }
+    }
+
+    //Recupère les cartes des mains des joueurs et de la table
+    public boolean recupCartes() {
+        this.lesCartes.addAll(this.cartesTable);
+        this.cartesTable.clear();
+
+        for (Joueur unJoueur : this.lesJoueurs) {
+            this.lesCartes.addAll(unJoueur.getLaMain());
+            unJoueur.clearMain();
+        }
+        return this.cartesTable.size() == 52;
     }
 
 }
