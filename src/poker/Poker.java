@@ -17,26 +17,30 @@ public class Poker {
     @SuppressWarnings("empty-statement")
     public static void main(String[] args) {
         // TODO code application logic here
-        
+
         //Création joueur
         Joueur unJoeur = new Joueur("Ogün");
         Joueur deuxJoueur = new Joueur("Ezziaro");
         Joueur troisJoueur = new Joueur("HariiBo");
         Joueur quatreJoueur = new Joueur("Gato");
-        
+        Joueur cinqJoueur = new Joueur("Kiki");
+        Joueur sixJoueur = new Joueur("Jay");
+
         //Création table + ajout joueur
         Table laTable = new Table();
         laTable.ajouterJoueur(unJoeur);
         laTable.ajouterJoueur(deuxJoueur);
         laTable.ajouterJoueur(troisJoueur);
         laTable.ajouterJoueur(quatreJoueur);
-        
+        laTable.ajouterJoueur(cinqJoueur);
+        laTable.ajouterJoueur(sixJoueur);
+
         //Création des cartes
         Carte lesCartes = new Carte();
         lesCartes.creationDesCartes(laTable);
-        
+
         //initialisation
         laTable.initTable();
     }
-    
+
 }

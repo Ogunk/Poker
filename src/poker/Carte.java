@@ -469,7 +469,22 @@ public class Carte implements Comparable<Carte> {
         return false;
     }
 
-//Fonction pour trier les cartes, utilisé par mainSuite
+    //Test hauteur
+    public static boolean mainHauteur(ArrayList<Carte> cartesTable, Joueur unJoueur) {
+        Carte.main = new ArrayList<>();
+        Carte.main.addAll(cartesTable);
+        Carte.main.addAll(unJoueur.getLaMain());
+
+        Collections.sort(Carte.main);
+
+        unJoueur.setMainGagnante(Carte.main);
+        unJoueur.setCombinaison("Hauteur");
+        unJoueur.setScore(Carte.main.get(0).getNumero());
+
+        return true;
+    }
+
+    //Fonction pour trier les cartes, utilisé par mainSuite
     @Override
     public int compareTo(Carte carte) {
 

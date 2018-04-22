@@ -22,9 +22,7 @@ public class Joueur {
     private int miseEnCours;
     private int score;
 
-    private boolean bouton;
-    private boolean petiteBlind;
-    private boolean grosseBlind;
+    private String role;
     private boolean fold;
 
     public static final int MAIN = 2;
@@ -38,9 +36,7 @@ public class Joueur {
         this.score = 0;
         this.combinaison = null;
 
-        this.bouton = false;
-        this.petiteBlind = false;
-        this.grosseBlind = false;
+        this.role = "Joueur";
         this.fold = false;
     }
 
@@ -64,31 +60,23 @@ public class Joueur {
     }
 
     //Affecte le bouton à un joueur
-    public void bouton(boolean b) {
-        this.bouton = b;
-        this.petiteBlind = false;
-        this.grosseBlind = false;
+    public void bouton() {
+        this.role = "Bouton";
     }
 
     //Affecte la petite blinde à un joueur
-    public void petiteBlind(boolean b) {
-        this.petiteBlind = b;
-        this.bouton = false;
-        this.grosseBlind = false;
+    public void petiteBlind() {
+        this.role = "Petite blind";
     }
 
     //Affecte la grosse blinde à un joueur
-    public void grosseBlind(boolean b) {
-        this.grosseBlind = b;
-        this.bouton = false;
-        this.petiteBlind = false;
+    public void grosseBlind() {
+        this.role = "Grosse blind";
     }
 
     //Reset les roles a false de tout les joueurs
     public void resetRole() {
-        this.bouton = false;
-        this.petiteBlind = false;
-        this.grosseBlind = false;
+        this.role = "Joueur";
     }
 
     //Retourne les cartes en main
@@ -200,15 +188,6 @@ public class Joueur {
 
     //Retourne un string du role du joueur
     public String getRole() {
-        if (this.bouton) {
-            return "Bouton";
-        } else if (this.grosseBlind) {
-            return "Grosse Blind";
-        } else if (this.petiteBlind) {
-            return "Petite Blind";
-        } else {
-            return "Joueur";
-        }
+        return this.role;
     }
-
 }
