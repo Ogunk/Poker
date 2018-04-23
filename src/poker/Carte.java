@@ -484,7 +484,7 @@ public class Carte implements Comparable<Carte> {
         return true;
     }
 
-    //Fonction pour trier les cartes, utilisé par mainSuite
+    //Fonction pour trier les cartes, de la plus forte 13 à la plus faible 1
     @Override
     public int compareTo(Carte carte) {
 

@@ -11,7 +11,7 @@ import java.util.ArrayList;
  *
  * @author Ogun
  */
-public class Joueur {
+public class Joueur implements Comparable<Joueur> {
 
     private String nom;
     private String combinaison;
@@ -90,6 +90,17 @@ public class Joueur {
         return res;
     }
 
+    //Retourne la main gagnante du joueur
+    public String mainGagnanteToString() {
+        String res = "";
+
+        for (int i = 0; i < this.mainGagnante.size(); i++) {
+            res = res + "Carte numéro " + (i + 1) + " : " + this.laMain.get(i).toString() + "\n";
+        }
+
+        return res;
+    }
+
     //Retourne le solde actuel du joueurs
     public int getArgent() {
         return this.argent;
@@ -123,20 +134,20 @@ public class Joueur {
     //Retourne le détail du joueur
     public String joueurToString() {
         String res = "";
-        res = res + "Nom : " + this.nom + " | Solde : " + this.argent;
+        res = res + "Nom : " + this.getNom() + " | Solde : " + this.getArgent() + " | Role : " + this.getRole();
 
         return res;
     }
 
     //Miser son argent
-    public void miserArgent(int mise) {
+    public int miserArgent(int mise) {
+        this.argent = this.argent - mise;
+        this.miseEnCours = this.miseEnCours + mise;
+        return mise;
+    }
 
-        if (mise > 0) {
-            this.argent = this.argent - mise;
-            this.miseEnCours = this.miseEnCours + mise;
-        } else if (mise == 0) {
-            seCoucher();
-        }
+    //Mise autant que la mise la plus haute
+    public void suivreMise() {
 
     }
 
@@ -173,11 +184,14 @@ public class Joueur {
     //Se coucher
     public void seCoucher() {
         this.fold = true;
+        System.out.println(this.getNom() + " est fatigué et tape la sièste.");
     }
 
     //Retourne la variable fold
     public boolean getCoucher() {
-        System.out.println(getNom() + " dors comme un dèp");
+        if (this.fold) {
+            System.out.println(getNom() + " dors comme un dèp");
+        }
         return this.fold;
     }
 
@@ -189,5 +203,16 @@ public class Joueur {
     //Retourne un string du role du joueur
     public String getRole() {
         return this.role;
+    }
+
+    //Fonction pour trier les cartes, utilisé par mainSuite
+    public int compareTo(Joueur joueur) {
+
+        int compareNumero = ((Joueur) joueur).getScore();
+
+        //ascending order
+        //return this.numero - compareNumero;
+        //descending order
+        return compareNumero - this.score;
     }
 }
