@@ -146,6 +146,16 @@ public class Joueur implements Comparable<Joueur> {
         return mise;
     }
 
+    //Retourne la mise en cours du joueur
+    public int getMiseEnCours() {
+        return this.miseEnCours;
+    }
+
+    //Clear la variable miseEnCours
+    public void clearMiseEnCours() {
+        this.miseEnCours = 0;
+    }
+
     //Mise autant que la mise la plus haute
     public void suivreMise() {
 
@@ -189,9 +199,6 @@ public class Joueur implements Comparable<Joueur> {
 
     //Retourne la variable fold
     public boolean getCoucher() {
-        if (this.fold) {
-            System.out.println(getNom() + " dors comme un dèp");
-        }
         return this.fold;
     }
 
