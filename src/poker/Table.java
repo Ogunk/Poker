@@ -247,25 +247,26 @@ public class Table extends Carte {
         this.poserFlop();
         System.out.println("## Mise premier tour");
         //Première mise avant l'affichage du flop
-        this.tourDeMise();
+        this.tourParole();
 
         //Affichage du flop
         //this.afficherFlop();
         System.out.println("## Mise flop");
-        //Nouveau tour de mise avant l'affichage du turn
-        this.tourDeMise();
+
+        //Nouveau tour de parole avant l'affichage du turn
+        this.tourParole();
 
         //Affichage du turn
         this.afficherTurn();
         System.out.println("## Mise turn");
         //Nouveau tour de mise avant l'affichage du turn
-        this.tourDeMise();
+        this.tourParole();
 
         //Affichage de la River
         this.afficherRiver();
         System.out.println("## Mise River");
         //Dernier tour de mise
-        this.tourDeMise();
+        this.tourParole();
 
         //TEST - A supprimer
         System.out.println("Voici toutes les cartes sur la table: ");
@@ -312,9 +313,8 @@ public class Table extends Carte {
         }
     }
 
-    //Parti pari entre chaque tour
-    public void tourDeMise() {
-
+    //Parole pour les joueurs entre chaque tour
+    public void tourParole() {
         if (this.premierTour) {
             this.joueursActifs.addAll(this.lesJoueurs);
             //Mise obligatoire PB GB
@@ -327,61 +327,50 @@ public class Table extends Carte {
         } else {
             this.miseHaute = 0;
         }
+        System.out.println("329 " + this.joueursActifs.size());
+        if (this.joueursActifs.size() > 1) {
+            while (!this.joueurMise()) {
+                int i = 0;
+                while (i < this.joueursActifs.size()) {
+                    System.out.println("\n" + this.joueursActifs.get(i).getNom());
+                    System.out.println("Que voulez-vous faire : ");
+                    if (!this.premierTour && this.miseHaute == 0) {
+                        System.out.println("0 - Check");
+                    }
+                    System.out.println("1 - Suivre");
+                    System.out.println("2 - Renchérir");
+                    System.out.println("3 - Se coucher");
 
-        while (!this.joueurMise()) {
-            int i = 0;
-            while (i < this.joueursActifs.size()) {
-                System.out.println("\n" + this.joueursActifs.get(i).getNom() + " Combien misez-vous ? | mise en cours : " + this.joueursActifs.get(i).getMiseEnCours() + "\n");
-                Scanner sc = new Scanner(System.in);
-                int mise = sc.nextInt();
-                if (this.joueursActifs.get(i).getMiseEnCours() + mise <= this.miseHaute && mise != -1) {
-                    while (this.joueursActifs.get(i).getArgent() < mise) {
-                        System.out.println("Impossible de miser une somme supérieur à votre solde,"
-                                + " veuillez miser quelque chose égal ou inférieur à : " + this.joueursActifs.get(i).getArgent());
-                        mise = sc.nextInt();
+                    Scanner sc = new Scanner(System.in);
+                    int choix = sc.nextInt();
+
+                    switch (choix) {
+                        case 2:
+                            this.tourDeMise(i);
+                            i++;
+                            break;
+                        case 0:
+                            System.out.println("Check mais pas codé");
+                            if (!this.premierTour) {
+                                this.check(i);
+                                i++;
+                            }
+                            break;
+                        case 3:
+                            this.joueurSeCouche(i);
+                            break;
+                        case 1:
+                            this.joueurSuivre(i);
+                            i++;
+                            break;
+                        default:
+                            System.out.println("Choix non pris en charge !");
                     }
-                    while (mise + this.joueursActifs.get(i).getMiseEnCours() < this.miseHaute) {
-                        System.out.println("La mise minimum de ce tour est de : " + this.miseHaute);
-                        mise = sc.nextInt();
-                        if (mise > this.miseHaute) {
-                            this.miseHaute = mise;
-                        }
-                    }
-                    if (this.joueursActifs.get(i).getMiseEnCours() + mise > this.miseHaute) {
-                        this.miseHaute = mise + this.joueursActifs.get(i).getMiseEnCours();
-                    }
-                    this.addBanque(this.joueursActifs.get(i).miserArgent(mise));
-                    System.out.println(this.joueursActifs.get(i).getNom() + " mise : " + mise);
-                    System.out.println("Banque : " + this.banque + " | Mise haute : " + this.miseHaute);
-                    i++;
-                } else if (this.joueursActifs.get(i).getMiseEnCours() + mise > this.miseHaute) {
-                    while (this.joueursActifs.get(i).getArgent() < mise) {
-                        System.out.println("Impossible de miser une somme supérieur à votre solde,"
-                                + " veuillez miser quelque chose égal ou inférieur à : " + this.joueursActifs.get(i).getArgent());
-                        mise = sc.nextInt();
-                    }
-                    while (mise + this.joueursActifs.get(i).getMiseEnCours() < this.miseHaute) {
-                        System.out.println("La mise minimum de ce tour est de : " + this.miseHaute);
-                        mise = sc.nextInt();
-                        if (mise > this.miseHaute) {
-                            this.miseHaute = mise;
-                        }
-                    }
-                    if (this.joueursActifs.get(i).getMiseEnCours() + mise > this.miseHaute) {
-                        this.miseHaute = mise;
-                    }
-                    this.addBanque(this.joueursActifs.get(i).miserArgent(mise));
-                    System.out.println(this.joueursActifs.get(i).getNom() + " relance de : " + mise + " | soit : " + this.joueursActifs.get(i).getMiseEnCours());
-                    System.out.println("Banque : " + this.banque + " | Mise haute : " + this.miseHaute);
-                    i++;
-                } else if (mise == -1) {
-                    this.joueursActifs.get(i).seCoucher();
-                    this.joueursActifs.remove(this.joueursActifs.get(i));
-                } else if (mise == 0) {
-                    System.out.println("Il faut miser quelque chose !");
                 }
             }
         }
+
+        //Fin de tour de parole, clear variable ect
         for (Joueur unJoueur : this.joueursActifs) {
             unJoueur.clearMiseEnCours();
         }
@@ -389,7 +378,55 @@ public class Table extends Carte {
             this.premierTour = false;
             Collections.rotate(this.joueursActifs, 2);
         }
+    }
 
+    public void tourDeMise(int i) {
+        System.out.println(this.joueursActifs.get(i).getNom() + ", combien misez-vous ?");
+        Scanner sc = new Scanner(System.in);
+        int mise = sc.nextInt();
+        if (this.joueursActifs.get(i).getMiseEnCours() + mise <= this.miseHaute && mise != -1) {
+            while (this.joueursActifs.get(i).getArgent() < mise) {
+                System.out.println("Impossible de miser une somme supérieur à votre solde,"
+                        + " veuillez miser quelque chose égal ou inférieur à : " + this.joueursActifs.get(i).getArgent());
+                mise = sc.nextInt();
+            }
+            while (mise + this.joueursActifs.get(i).getMiseEnCours() < this.miseHaute) {
+                System.out.println("La mise minimum de ce tour est de : " + this.miseHaute);
+                mise = sc.nextInt();
+                if (mise > this.miseHaute) {
+                    this.miseHaute = mise;
+                }
+            }
+            if (this.joueursActifs.get(i).getMiseEnCours() + mise > this.miseHaute) {
+                this.miseHaute = mise + this.joueursActifs.get(i).getMiseEnCours();
+            }
+            this.addBanque(this.joueursActifs.get(i).miserArgent(mise));
+            System.out.println(this.joueursActifs.get(i).getNom() + " mise : " + mise);
+            System.out.println("Banque : " + this.banque + " | Mise haute : " + this.miseHaute);
+            i++;
+        } else if (this.joueursActifs.get(i).getMiseEnCours() + mise > this.miseHaute) {
+            while (this.joueursActifs.get(i).getArgent() < mise) {
+                System.out.println("Impossible de miser une somme supérieur à votre solde,"
+                        + " veuillez miser quelque chose égal ou inférieur à : " + this.joueursActifs.get(i).getArgent());
+                mise = sc.nextInt();
+            }
+            while (mise + this.joueursActifs.get(i).getMiseEnCours() < this.miseHaute) {
+                System.out.println("La mise minimum de ce tour est de : " + this.miseHaute);
+                mise = sc.nextInt();
+                if (mise > this.miseHaute) {
+                    this.miseHaute = mise;
+                }
+            }
+            if (this.joueursActifs.get(i).getMiseEnCours() + mise > this.miseHaute) {
+                this.miseHaute = mise;
+            }
+            this.addBanque(this.joueursActifs.get(i).miserArgent(mise));
+            System.out.println(this.joueursActifs.get(i).getNom() + " relance de : " + mise + " | soit : " + this.joueursActifs.get(i).getMiseEnCours());
+            System.out.println("Banque : " + this.banque + " | Mise haute : " + this.miseHaute);
+            i++;
+        } else if (mise == 0) {
+            System.out.println("Il faut miser quelque chose !");
+        }
     }
 
     //Ajouter l'argent a la banque
@@ -487,6 +524,22 @@ public class Table extends Carte {
                 System.out.println(unJoueur.mainGagnanteToString());
             });
         }
+    }
+
+    public void check(int i) {
+        System.out.println(this.joueursActifs.get(i).getNom());
+    }
+
+    public void joueurSeCouche(int i) {
+        this.joueursActifs.get(i).seCoucher();
+        this.joueursActifs.remove(this.joueursActifs.get(i));
+    }
+
+    public void joueurSuivre(int i) {
+
+        this.addBanque(this.joueursActifs.get(i).miserArgent(this.miseHaute - this.joueursActifs.get(i).getMiseEnCours()));
+        System.out.println(this.joueursActifs.get(i).getNom() + " suit " + this.joueursActifs.get(i).getMiseEnCours());
+        System.out.println("Banque : " + this.banque);
     }
 
 }
