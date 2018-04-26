@@ -16,7 +16,9 @@ import java.util.Comparator;
 public class Carte implements Comparable<Carte> {
 
     private String laCouleur;
+    private String nom;
     private int numero;
+
     private static int i;
     private static int duo;
     private static int triple;
@@ -24,9 +26,10 @@ public class Carte implements Comparable<Carte> {
     private static ArrayList<Carte> jeu;
 
     //Constructeur
-    public Carte(String couleur, int num) {
+    public Carte(String couleur, int num, String leNom) {
         this.laCouleur = couleur;
         this.numero = num;
+        this.nom = leNom;
     }
 
     public Carte() {
@@ -34,17 +37,29 @@ public class Carte implements Comparable<Carte> {
 
     //Création des cartes
     public void creationDesCartes(Table uneTable) {
-        String[] lesCouleurs = new String[4];
-        lesCouleurs[0] = "Trèfles";
-        lesCouleurs[1] = "Coeurs";
-        lesCouleurs[2] = "Carreaux";
-        lesCouleurs[3] = "Piques";
+        String[] lesCouleurs = {"Trèfles", "Coeurs", "Carreaux", "Piques"};
 
         Carte uneCarte;
 
-        for (int i = 0; i < lesCouleurs.length; i++) {
+        for (String lesCouleur : lesCouleurs) {
             for (int j = 1; j <= 13; j++) {
-                uneCarte = new Carte(lesCouleurs[i], j);
+                switch (j) {
+                    case 10:
+                        uneCarte = new Carte(lesCouleur, j, "Valet");
+                        break;
+                    case 11:
+                        uneCarte = new Carte(lesCouleur, j, "Dame");
+                        break;
+                    case 12:
+                        uneCarte = new Carte(lesCouleur, j, "Roi");
+                        break;
+                    case 13:
+                        uneCarte = new Carte(lesCouleur, j, "As");
+                        break;
+                    default:
+                        uneCarte = new Carte(lesCouleur, j, String.valueOf(j));
+                        break;
+                }
                 uneTable.ajouterCarte(uneCarte);
             }
         }
@@ -56,7 +71,7 @@ public class Carte implements Comparable<Carte> {
     @Override
     public String toString() {
         String res = "";
-        res = res + getCouleur() + " " + getNumero();
+        res = getNom() + " " + getCouleur();
 
         return res;
     }
@@ -69,6 +84,11 @@ public class Carte implements Comparable<Carte> {
     //Rtourne la valeur de la carte
     public int getNumero() {
         return this.numero;
+    }
+
+    //Rtourne le nom de la carte
+    public String getNom() {
+        return this.nom;
     }
 
     //Test main couleur

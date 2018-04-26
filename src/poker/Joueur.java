@@ -23,7 +23,7 @@ public class Joueur implements Comparable<Joueur> {
     private int score;
 
     private String role;
-    private boolean fold;
+    private boolean check;
 
     public static final int MAIN = 2;
 
@@ -37,7 +37,7 @@ public class Joueur implements Comparable<Joueur> {
         this.combinaison = null;
 
         this.role = "Joueur";
-        this.fold = false;
+        this.check = false;
     }
 
     //Le joueur reçoit ses deux cartes
@@ -93,9 +93,9 @@ public class Joueur implements Comparable<Joueur> {
     //Retourne la main gagnante du joueur
     public String mainGagnanteToString() {
         String res = "";
-
+        System.out.println("Main de " + this.getNom());
         for (int i = 0; i < this.mainGagnante.size(); i++) {
-            res = res + "Carte numéro " + (i + 1) + " : " + this.laMain.get(i).toString() + "\n";
+            res = res + "Carte numéro " + (i + 1) + " : " + this.mainGagnante.get(i).toString() + "\n";
         }
 
         return res;
@@ -109,6 +109,10 @@ public class Joueur implements Comparable<Joueur> {
     //Modifie le solde actuel du joueur
     public void setArgent(int argent) {
         this.argent = argent;
+    }
+
+    public void gagneArgent(int banque) {
+        this.argent += banque;
     }
 
     //Modifie le score du joueur
@@ -191,15 +195,20 @@ public class Joueur implements Comparable<Joueur> {
         this.mainGagnante.clear();
     }
 
-    //Se coucher
-    public void seCoucher() {
-        this.fold = true;
-        System.out.println(this.getNom() + " est fatigué et tape la sièste.");
+    //Checker
+    public void check() {
+        this.check = true;
+        System.out.println(this.getNom() + " check !");
+    }
+
+    //Retourne la variable check
+    public boolean getCheck() {
+        return this.check;
     }
 
     //Retourne la variable fold
     public boolean getCoucher() {
-        return this.fold;
+        return this.check;
     }
 
     //Suivre

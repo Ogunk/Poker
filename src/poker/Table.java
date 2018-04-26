@@ -144,16 +144,23 @@ public class Table extends Carte {
     //On vérifie si tout les joueurs ont bien misé
     public boolean joueurMise() {
         int nbJPret = 0;
+        int check = 0;
         boolean pret = false;
 
-        if (this.miseHaute != 0) {
-            for (Joueur unJoueur : this.joueursActifs) {
-                if (unJoueur.getMiseEnCours() == this.miseHaute) {
-                    nbJPret++;
-                }
+        for (Joueur unJoueur : this.joueursActifs) {
+            if (unJoueur.getMiseEnCours() == this.miseHaute && this.miseHaute != 0) {
+                nbJPret++;
+            }
+            if (unJoueur.getCheck()) {
+                check++;
             }
         }
+
         if (nbJPret == this.joueursActifs.size()) {
+            pret = true;
+        } else if (this.joueursActifs.size() == 1) {
+            pret = true;
+        } else if (check == this.joueursActifs.size()) {
             pret = true;
         }
         return pret;
@@ -193,14 +200,14 @@ public class Table extends Carte {
 
     //Affiche le flop, les 3 première carte sur la table, brule la carte du haut avant d'afficher les suivantes
     public void afficherFlop() {
-        for (Carte uneCarte : this.cartesTable) {
-            System.out.println(uneCarte.toString());
-        }
-
+        System.out.println("Affichage du flop");
+        System.out.println(this.cartesTable.get(0).toString());
+        System.out.println(this.cartesTable.get(1).toString());
+        System.out.println(this.cartesTable.get(2).toString());
     }
 
     //Affiche la 4eme carte sur la table, on brule la 1ere carte
-    public void afficherTurn() {
+    public void poserTurn() {
         this.trash.add(this.lesCartes.get(0));
         this.lesCartes.remove(0);
 
@@ -208,13 +215,25 @@ public class Table extends Carte {
         this.lesCartes.remove(0);
     }
 
-    //Affichage de la derniere carte, on brule la 1ere carte
-    public void afficherRiver() {
+    //Affiche la river
+    public void afficherTurn() {
+        System.out.println("Affichage du turn");
+        System.out.println(this.cartesTable.get(3).toString());
+    }
+
+    //Pose de la derniere carte, on brule la 1ere carte
+    public void poserRiver() {
         this.trash.add(this.lesCartes.get(0));
         this.lesCartes.remove(0);
 
         this.cartesTable.add(this.lesCartes.get(0));
         this.lesCartes.remove(0);
+    }
+
+    //Affiche la river
+    public void afficherRiver() {
+        System.out.println("Affichage de la river");
+        System.out.println(this.cartesTable.get(4).toString());
     }
 
     //Retourne l'argent que cette attribue aux joueurs
@@ -237,34 +256,30 @@ public class Table extends Carte {
         //Distribution des cartes
         this.distribuerCartes();
 
-        //TEST - A supprimer
-        for (Joueur unJoueur : this.lesJoueurs) {
-            System.out.println(unJoueur.joueurToString());
-            System.out.println(unJoueur.mainToString());
-        }
-
         //Pose du flop sur la table, face cachée
         this.poserFlop();
-        System.out.println("## Mise premier tour");
+        System.out.println("\n## Mise premier tour");
         //Première mise avant l'affichage du flop
         this.tourParole();
 
         //Affichage du flop
-        //this.afficherFlop();
-        System.out.println("## Mise flop");
+        this.afficherFlop();
+        System.out.println("\n## Mise flop");
 
         //Nouveau tour de parole avant l'affichage du turn
         this.tourParole();
 
         //Affichage du turn
+        this.poserTurn();
         this.afficherTurn();
-        System.out.println("## Mise turn");
+        System.out.println("\n## Mise turn");
         //Nouveau tour de mise avant l'affichage du turn
         this.tourParole();
 
         //Affichage de la River
+        this.poserRiver();
         this.afficherRiver();
-        System.out.println("## Mise River");
+        System.out.println("\n## Mise River");
         //Dernier tour de mise
         this.tourParole();
 
@@ -273,15 +288,27 @@ public class Table extends Carte {
         for (Carte uneCarte : this.cartesTable) {
             System.out.println(uneCarte.toString());
         }
-        System.out.println("Test 1");
+
+        //Met la main la plus forte de chaque joueur
+        this.joueurMain();
+
         //Election main Gagnante et affichage main gagnante
-        this.afficherMainGagnante(this.mainGagnante());
+        if (this.joueursActifs.size() > 1) {
+            this.afficherMainGagnante(this.mainGagnante());
+        } else if (this.joueursActifs.size() == 1) {
+            this.afficherMainGagnante(this.joueursActifs);
+        }
         System.out.println("Test 2");
         //Gagnant récupère la banque
-        //this.joueurGagneBanque();
+        this.joueurGagneBanque(this.joueursActifs);
         //
         //Récupère les cartes
-        this.recupCartes();
+        if (this.recupCartes()) {
+            System.out.println("Les cartes ont étaient récup");
+        } else {
+            System.out.println("IL MANQUE DES CARTES !");
+        }
+
         System.out.println("################################## Test 3");
         //Passe les joueurs sans argents en spectateur
         this.spectateur();
@@ -327,14 +354,16 @@ public class Table extends Carte {
         } else {
             this.miseHaute = 0;
         }
-        System.out.println("329 " + this.joueursActifs.size());
-        if (this.joueursActifs.size() > 1) {
-            while (!this.joueurMise()) {
-                int i = 0;
-                while (i < this.joueursActifs.size()) {
-                    System.out.println("\n" + this.joueursActifs.get(i).getNom());
-                    System.out.println("Que voulez-vous faire : ");
-                    if (!this.premierTour && this.miseHaute == 0) {
+        System.out.println("Nb joueursActifs " + this.joueursActifs.size());
+
+        while (!this.joueurMise()) {
+            System.out.println("Nb joueur : " + this.joueursActifs.size());
+
+            int i = 0;
+            while (i < this.joueursActifs.size()) {
+                if (this.joueursActifs.size() > 1) {
+                    System.out.println("\n" + this.joueursActifs.get(i).getNom() + " que voulez-vous faire : ");
+                    if ((!this.premierTour && this.miseHaute == 0) || (this.joueursActifs.get(i).getMiseEnCours() == this.miseHaute)) {
                         System.out.println("0 - Check");
                     }
                     System.out.println("1 - Suivre");
@@ -350,10 +379,12 @@ public class Table extends Carte {
                             i++;
                             break;
                         case 0:
-                            System.out.println("Check mais pas codé");
-                            if (!this.premierTour) {
+
+                            if ((!this.premierTour && this.miseHaute == 0) || (this.joueursActifs.get(i).getMiseEnCours() == this.miseHaute)) {
                                 this.check(i);
                                 i++;
+                            } else {
+                                System.out.println("Le check n'est pas possible maintenant !");
                             }
                             break;
                         case 3:
@@ -366,6 +397,9 @@ public class Table extends Carte {
                         default:
                             System.out.println("Choix non pris en charge !");
                     }
+                } else {
+                    System.out.println("Joueur seul");
+                    i = this.joueursActifs.size() + 1;
                 }
             }
         }
@@ -384,7 +418,7 @@ public class Table extends Carte {
         System.out.println(this.joueursActifs.get(i).getNom() + ", combien misez-vous ?");
         Scanner sc = new Scanner(System.in);
         int mise = sc.nextInt();
-        if (this.joueursActifs.get(i).getMiseEnCours() + mise <= this.miseHaute && mise != -1) {
+        if (this.joueursActifs.get(i).getMiseEnCours() + mise <= this.miseHaute) {
             while (this.joueursActifs.get(i).getArgent() < mise) {
                 System.out.println("Impossible de miser une somme supérieur à votre solde,"
                         + " veuillez miser quelque chose égal ou inférieur à : " + this.joueursActifs.get(i).getArgent());
@@ -440,6 +474,7 @@ public class Table extends Carte {
         this.lesCartes.addAll(this.cartesTable);
         this.trash.clear();
         this.cartesTable.clear();
+        this.joueursActifs.clear();
 
         for (Joueur unJoueur : this.lesJoueurs) {
             this.lesCartes.addAll(unJoueur.getLaMain());
@@ -448,8 +483,8 @@ public class Table extends Carte {
         return this.cartesTable.size() == 52;
     }
 
+    //
     public ArrayList<Joueur> mainGagnante() {
-
         ArrayList<String> combinaison = new ArrayList<>();
         ArrayList<Joueur> joueurMainForte = new ArrayList<>();
 
@@ -466,11 +501,9 @@ public class Table extends Carte {
         combinaison.add("Hauteur");
 
         for (String combi : combinaison) {
-            for (Joueur unJoueur : this.lesJoueurs) {
-                if (!unJoueur.getCoucher()) {
-                    if (unJoueur.getCombinaison() == combi) {
-                        joueurMainForte.add(unJoueur);
-                    }
+            for (Joueur unJoueur : this.joueursActifs) {
+                if (unJoueur.getCombinaison() == combi) {
+                    joueurMainForte.add(unJoueur);
                 }
             }
             if (joueurMainForte.size() >= 1) {
@@ -527,11 +560,12 @@ public class Table extends Carte {
     }
 
     public void check(int i) {
-        System.out.println(this.joueursActifs.get(i).getNom());
+        System.out.println(this.joueursActifs.get(i).getNom() + " check !");
+        this.joueursActifs.get(i).check();
     }
 
     public void joueurSeCouche(int i) {
-        this.joueursActifs.get(i).seCoucher();
+        System.out.println(this.joueursActifs.get(i).getNom() + " se couche zzzZzzZzZZZZzz");
         this.joueursActifs.remove(this.joueursActifs.get(i));
     }
 
@@ -542,4 +576,25 @@ public class Table extends Carte {
         System.out.println("Banque : " + this.banque);
     }
 
+    public void joueurGagneBanque(ArrayList<Joueur> listeJoueur) {
+        if (listeJoueur.size() == 1) {
+            listeJoueur.get(0).gagneArgent(this.banque);
+            this.banque = 0;
+        }
+    }
+
+    public void joueurMain() {
+        for (Joueur unJoueur : this.joueursActifs) {
+            if (mainFlushRoyal(this.cartesTable, unJoueur)) {
+            } else if (mainFlush(this.cartesTable, unJoueur)) {
+            } else if (mainCarre(this.cartesTable, unJoueur)) {
+            } else if (mainFull(this.cartesTable, unJoueur)) {
+            } else if (mainCouleur(this.cartesTable, unJoueur)) {
+            } else if (mainSuite(this.cartesTable, unJoueur)) {
+            } else if (mainBrelan(this.cartesTable, unJoueur)) {
+            } else if (mainPaires(this.cartesTable, unJoueur)) {
+            } else if (mainHauteur(this.cartesTable, unJoueur)) {
+            }
+        }
+    }
 }
