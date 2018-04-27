@@ -33,7 +33,7 @@ public class Poker {
         laTable.ajouterJoueur(troisJoueur);
         laTable.ajouterJoueur(quatreJoueur);
         laTable.ajouterJoueur(cinqJoueur);
-        laTable.ajouterJoueur(sixJoueur);
+        //laTable.ajouterJoueur(sixJoueur);
 
         //Création des cartes
         Carte lesCartes = new Carte();

@@ -30,6 +30,7 @@ public class Joueur implements Comparable<Joueur> {
     //Constructeur
     public Joueur(String n) {
         this.laMain = new ArrayList<>();
+        this.mainGagnante = new ArrayList<>();
         this.nom = n;
         this.argent = 0;
         this.miseEnCours = 0;
@@ -192,13 +193,19 @@ public class Joueur implements Comparable<Joueur> {
 
     //Clear la main du joueur
     public void clearMainGagnante() {
-        this.mainGagnante.clear();
+        if (!this.mainGagnante.isEmpty()) {
+            this.mainGagnante.clear();
+        }
     }
 
     //Checker
     public void check() {
         this.check = true;
-        System.out.println(this.getNom() + " check !");
+    }
+
+    //Clear check
+    public void clearCheck() {
+        this.check = false;
     }
 
     //Retourne la variable check
