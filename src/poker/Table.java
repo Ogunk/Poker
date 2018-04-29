@@ -362,54 +362,60 @@ public class Table extends Carte {
 
         while (!this.joueurAMiser()) {
             System.out.println("While 364");
+            for (Joueur unJ : this.joueursActifs) {
+                System.out.println(unJ.getNom() + " - MiseEnCours : " + unJ.getMiseEnCours() + " - Mise Haute : " + this.miseHaute);
+            }
             int i = 0;
             while (i < this.joueursActifs.size()) {
                 if (this.joueursActifs.size() > 1) {
+                    if (this.joueursActifs.get(i).getMiseEnCours() != this.miseHaute) {
+                        System.out.println("\n" + this.joueursActifs.get(i).getNom() + " " + this.joueursActifs.get(i).getMiseEnCours() + " " + this.miseHaute);
+                        System.out.println("\n" + this.joueursActifs.get(i).getNom() + " que voulez-vous faire : ");
+                        if ((!this.premierTour && this.miseHaute == 0) || (this.joueursActifs.get(i).getMiseEnCours() == this.miseHaute)) {
+                            System.out.println("0 - Check");
+                        }
+                        System.out.println("1 - Suivre");
+                        if (this.potTour == 0) {
+                            System.out.println("2 - Miser");
+                        } else {
+                            System.out.println("2 - Renchérir");
+                        }
+                        System.out.println("3 - Se coucher");
 
-                    System.out.println("\n" + this.joueursActifs.get(i).getNom() + " " + this.joueursActifs.get(i).getMiseEnCours() + " " + this.miseHaute);
-                    System.out.println("\n" + this.joueursActifs.get(i).getNom() + " que voulez-vous faire : ");
-                    if ((!this.premierTour && this.miseHaute == 0) || (this.joueursActifs.get(i).getMiseEnCours() == this.miseHaute)) {
-                        System.out.println("0 - Check");
-                    }
-                    System.out.println("1 - Suivre");
-                    if (this.potTour == 0) {
-                        System.out.println("2 - Miser");
-                    } else {
-                        System.out.println("2 - Renchérir");
-                    }
-                    System.out.println("3 - Se coucher");
+                        Scanner sc = new Scanner(System.in);
+                        int choix = sc.nextInt();
 
-                    Scanner sc = new Scanner(System.in);
-                    int choix = sc.nextInt();
+                        switch (choix) {
+                            case 2:
+                                if (this.potTour == 0) {
+                                    this.joueurMise(i);
+                                } else {
+                                    this.joueurRencherit(i);
+                                }
 
-                    switch (choix) {
-                        case 2:
-                            if (this.potTour == 0) {
-                                this.joueurMise(i);
-                            } else {
-                                this.joueurRencherit(i);
-                            }
-
-                            i++;
-                            break;
-                        case 0:
-
-                            if ((!this.premierTour && this.miseHaute == 0) || (this.joueursActifs.get(i).getMiseEnCours() == this.miseHaute)) {
-                                this.joueurCheck(i);
                                 i++;
-                            } else {
-                                System.out.println("Le check n'est pas possible maintenant !");
-                            }
-                            break;
-                        case 3:
-                            this.joueurSeCouche(i);
-                            break;
-                        case 1:
-                            this.joueurSuivre(i);
-                            i++;
-                            break;
-                        default:
-                            System.out.println("Choix non pris en charge !");
+                                break;
+                            case 0:
+
+                                if ((!this.premierTour && this.miseHaute == 0) || (this.joueursActifs.get(i).getMiseEnCours() == this.miseHaute)) {
+                                    this.joueurCheck(i);
+                                    i++;
+                                } else {
+                                    System.out.println("Le check n'est pas possible maintenant !");
+                                }
+                                break;
+                            case 3:
+                                this.joueurSeCouche(i);
+                                break;
+                            case 1:
+                                this.joueurSuivre(i);
+                                i++;
+                                break;
+                            default:
+                                System.out.println("Choix non pris en charge !");
+                        }
+                    } else {
+                        i++;
                     }
                 } else {
                     System.out.println("Joueur seul");
