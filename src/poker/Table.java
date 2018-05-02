@@ -55,12 +55,11 @@ public class Table extends Carte {
 
     //Initialise le jeu
     public void initTable() {
+
         //Début d'une partie
         this.setArgentJoueurs();
         this.melangerLesJoueurs();
         this.joueurRole();
-
-        System.out.println(this.lesCartes.size());
 
         while (this.lesJoueurs.size() > 1) {
             this.jouer();

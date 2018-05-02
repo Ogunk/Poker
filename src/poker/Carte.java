@@ -57,7 +57,7 @@ public class Carte implements Comparable<Carte> {
                         uneCarte = new Carte(lesCouleur, j, "As");
                         break;
                     default:
-                        uneCarte = new Carte(lesCouleur, j, String.valueOf(j));
+                        uneCarte = new Carte(lesCouleur, j, String.valueOf(j + 1));
                         break;
                 }
                 uneTable.ajouterCarte(uneCarte);
@@ -71,7 +71,7 @@ public class Carte implements Comparable<Carte> {
     @Override
     public String toString() {
         String res = "";
-        res = getNom() + " " + getCouleur();
+        res = this.getNom() + " " + this.getCouleur();
 
         return res;
     }
