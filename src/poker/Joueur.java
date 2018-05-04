@@ -94,7 +94,7 @@ public class Joueur implements Comparable<Joueur> {
     //Retourne la main gagnante du joueur
     public String mainGagnanteToString() {
         String res = "";
-        System.out.println("Main de " + this.getNom());
+        System.out.println(this.getNom() + " - main " + this.combinaison + " taille main : " + this.mainGagnante.size() + " - score : " + this.getScore());
         for (int i = 0; i < this.mainGagnante.size(); i++) {
             res = res + "Carte numéro " + (i + 1) + " : " + this.mainGagnante.get(i).toString() + "\n";
         }

@@ -246,11 +246,14 @@ public class Table extends Carte {
         //Distribution des cartes
         this.distribuerCartes();
 
-        //Test
-        for (Joueur joueur : this.lesJoueurs) {
-            System.out.println(joueur.joueurToString());
-            System.out.println(joueur.mainToString());
+        for (Joueur j : this.lesJoueurs) {
+            System.out.println(j.joueurToString());
         }
+
+        System.out.println("## TODO ##");
+        System.out.println("- Premier tour de mise, la big blind ne parle pas si tout le monde suit");
+        System.out.println("- Check au tour du turn, pas de parole pour le tour river");
+        System.out.println("Hauteur sort plus de 5 cartes");
 
         //Pose du flop sur la table, face cachée
         this.poserFlop();
@@ -261,6 +264,14 @@ public class Table extends Carte {
 
         //Affichage du flop
         this.afficherFlop();
+        System.out.println("\n");
+
+        //Test
+        for (Joueur joueur : this.joueursActifs) {
+            System.out.println(joueur.joueurToString());
+            System.out.println(joueur.mainToString());
+        }
+
         System.out.println("\n######### MISE FLOP #########");
         System.out.println(this.grosseBlind);
         //Nouveau tour de parole avant l'affichage du turn
@@ -269,7 +280,16 @@ public class Table extends Carte {
 
         //Affichage du turn
         this.poserTurn();
+        this.afficherFlop();
         this.afficherTurn();
+        System.out.println("\n");
+
+        //Test
+        for (Joueur joueur : this.joueursActifs) {
+            System.out.println(joueur.joueurToString());
+            System.out.println(joueur.mainToString());
+        }
+
         System.out.println("\n######### MISE TURN #########");
         //Nouveau tour de mise avant l'affichage du turn
         this.tourParole();
@@ -277,7 +297,17 @@ public class Table extends Carte {
 
         //Affichage de la River
         this.poserRiver();
+        this.afficherFlop();
+        this.afficherTurn();
         this.afficherRiver();
+        System.out.println("\n");
+
+        //Test
+        for (Joueur joueur : this.joueursActifs) {
+            System.out.println(joueur.joueurToString());
+            System.out.println(joueur.mainToString());
+        }
+
         System.out.println("\n######### MISE RIVER #########");
         //Dernier tour de mise
         this.tourParole();
@@ -294,6 +324,11 @@ public class Table extends Carte {
 
         //Election main Gagnante et affichage main gagnante
         if (this.joueursActifs.size() > 1) {
+            System.out.println("Mains des joueurs :");
+            for (Joueur unJoueur : this.joueursActifs) {
+                System.out.println(unJoueur.getNom() + unJoueur.getCombinaison() + unJoueur.getScore());
+            }
+            System.out.println(this.joueursActifs.get(0).getNom() + " est seul :(");
             this.afficherMainGagnante(this.mainGagnante());
         } else if (this.joueursActifs.size() == 1) {
             this.afficherMainGagnante(this.joueursActifs);
@@ -369,7 +404,7 @@ public class Table extends Carte {
             int i = 0;
             while (i < this.joueursActifs.size()) {
                 if (this.joueursActifs.size() > 1) {
-                    if (this.joueursActifs.get(i).getMiseEnCours() != this.miseMin) {
+                    if ((this.joueursActifs.get(i).getMiseEnCours() != this.miseMin) || (this.joueursActifs.get(i).getMiseEnCours() == this.miseMin && this.premierTour)) {
                         System.out.println("\n" + this.joueursActifs.get(i).getNom() + " " + this.joueursActifs.get(i).getMiseEnCours() + " " + this.miseMin);
                         System.out.println("\n" + this.joueursActifs.get(i).getNom() + " que voulez-vous faire : ");
                         if ((!this.premierTour && this.potTour == 0) || (this.joueursActifs.get(i).getMiseEnCours() == this.miseMin)) {
@@ -516,24 +551,15 @@ public class Table extends Carte {
 
     //
     public ArrayList<Joueur> mainGagnante() {
-        ArrayList<String> combinaison = new ArrayList<>();
         ArrayList<Joueur> joueurMainForte = new ArrayList<>();
 
         int i = 1;
 
-        combinaison.add("FlushRoyal");
-        combinaison.add("Flush");
-        combinaison.add("Carre");
-        combinaison.add("Couleur");
-        combinaison.add("Suite");
-        combinaison.add("Brelan");
-        combinaison.add("Double");
-        combinaison.add("Paire");
-        combinaison.add("Hauteur");
+        String[] combinaison = {"FlushRoyal", "Flush", "Carre", "Couleur", "Suite", "Brelan", "Double", "Paire", "Hauteur"};
 
         for (String combi : combinaison) {
             for (Joueur unJoueur : this.joueursActifs) {
-                if (unJoueur.getCombinaison() == combi) {
+                if (unJoueur.getCombinaison().equals(combi)) {
                     joueurMainForte.add(unJoueur);
                 }
             }
